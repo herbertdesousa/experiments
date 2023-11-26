@@ -1,5 +1,6 @@
 package engine
 
+import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
@@ -19,8 +20,18 @@ object Window {
     }
 
     fun run() {
+        println("Game Started")
+
         init()
         loop()
+
+        // Free the memory
+        glfwFreeCallbacks(glfwWindow)
+        glfwDestroyWindow(glfwWindow)
+
+        // Terminate GLFW and the free error callback
+        glfwTerminate()
+        glfwSetErrorCallback(null)?.free()
     }
 
     private fun init() {
