@@ -6,7 +6,6 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil.NULL
-import java.lang.IllegalStateException
 import kotlin.properties.Delegates
 
 object Window {
@@ -19,11 +18,11 @@ object Window {
         return Window
     }
 
-    fun run() {
+    fun run(onStart: (window: Long) -> Unit, onUpdate: () -> Unit) {
         println("Game Started")
 
-        init()
-        loop()
+        init(onStart)
+        loop(onUpdate)
 
         // Free the memory
         glfwFreeCallbacks(glfwWindow)
@@ -34,7 +33,7 @@ object Window {
         glfwSetErrorCallback(null)?.free()
     }
 
-    private fun init() {
+    private fun init(onStart: (window: Long) -> Unit) {
         GLFWErrorCallback.createPrint(System.err).set()
 
         if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW")
@@ -49,8 +48,10 @@ object Window {
         glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL)
             ?: throw IllegalStateException("Failed to Create GLFW Window")
 
-        // Make OpenGL context current
         glfwMakeContextCurrent(glfwWindow)
+
+        onStart(glfwWindow)
+
         // Enable v-sync
         glfwSwapInterval(1)
 
@@ -60,13 +61,15 @@ object Window {
         GL.createCapabilities()
     }
 
-    private fun loop() {
+    private fun loop(onUpdate: () -> Unit) {
         while (!glfwWindowShouldClose(glfwWindow)) {
             // Poll events
             glfwPollEvents()
 
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
             glClear(GL_COLOR_BUFFER_BIT)
+
+            onUpdate()
 
             glfwSwapBuffers(glfwWindow)
         }
