@@ -14,6 +14,8 @@ object Window {
     private val title = "My Game"
     private var window by Delegates.notNull<Long>()
 
+    private var red = 0f; var green = 0f; var blue = 0f; var alpha = 0f
+
     fun get(): Long = window
 
     fun run(onStart: (window: Long) -> Unit, onUpdate: () -> Unit) {
@@ -64,7 +66,7 @@ object Window {
             // Poll events
             glfwPollEvents()
 
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
+            glClearColor(red, green, blue, alpha)
             glClear(GL_COLOR_BUFFER_BIT)
 
             onUpdate()
