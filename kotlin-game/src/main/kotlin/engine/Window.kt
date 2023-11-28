@@ -12,11 +12,9 @@ object Window {
     private val width = 1920 / 2
     private val height = 1080 / 2
     private val title = "My Game"
-    private var glfwWindow by Delegates.notNull<Long>()
+    private var window by Delegates.notNull<Long>()
 
-    fun get(): Window {
-        return Window
-    }
+    fun get(): Long = window
 
     fun run(onStart: (window: Long) -> Unit, onUpdate: () -> Unit) {
         println("Game Started")
@@ -25,8 +23,8 @@ object Window {
         loop(onUpdate)
 
         // Free the memory
-        glfwFreeCallbacks(glfwWindow)
-        glfwDestroyWindow(glfwWindow)
+        glfwFreeCallbacks(window)
+        glfwDestroyWindow(window)
 
         // Terminate GLFW and the free error callback
         glfwTerminate()
@@ -45,24 +43,24 @@ object Window {
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE)
 
         // Create Window
-        glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL)
+        window = glfwCreateWindow(width, height, title, NULL, NULL)
             ?: throw IllegalStateException("Failed to Create GLFW Window")
 
-        glfwMakeContextCurrent(glfwWindow)
+        glfwMakeContextCurrent(window)
 
-        onStart(glfwWindow)
+        onStart(window)
 
         // Enable v-sync
         glfwSwapInterval(1)
 
         // Make the window visible
-        glfwShowWindow(glfwWindow)
+        glfwShowWindow(window)
 
         GL.createCapabilities()
     }
 
     private fun loop(onUpdate: () -> Unit) {
-        while (!glfwWindowShouldClose(glfwWindow)) {
+        while (!glfwWindowShouldClose(window)) {
             // Poll events
             glfwPollEvents()
 
@@ -71,7 +69,7 @@ object Window {
 
             onUpdate()
 
-            glfwSwapBuffers(glfwWindow)
+            glfwSwapBuffers(window)
         }
     }
 }
