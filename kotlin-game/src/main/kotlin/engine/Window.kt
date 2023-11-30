@@ -1,5 +1,6 @@
 package engine
 
+import engine.util.Time
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -14,15 +15,22 @@ object Window {
     private val title = "My Game"
     private var window by Delegates.notNull<Long>()
 
-    private var red = 0f; var green = 0f; var blue = 0f; var alpha = 0f
+    private var red = 0f;
+    var green = 0f;
+    var blue = 0f;
+    var alpha = 0f
 
     fun get(): Long = window
 
-    fun run(onStart: (window: Long) -> Unit, onUpdate: () -> Unit) {
+    fun run(
+        onStart: (window: Long) -> Unit,
+        onUpdate: () -> Unit,
+        onFixedUpdate: () -> Unit,
+    ) {
         println("Game Started")
 
         init(onStart)
-        loop(onUpdate)
+        loop(onUpdate, onFixedUpdate)
 
         // Free the memory
         glfwFreeCallbacks(window)
@@ -61,7 +69,12 @@ object Window {
         GL.createCapabilities()
     }
 
-    private fun loop(onUpdate: () -> Unit) {
+    private fun loop(onUpdate: () -> Unit, onFixedUpdate: () -> Unit) {
+        val fixedUpdateRate = 0.02f
+
+        var currentTime = Time.now()
+        var endTime = Time.addSeconds(Time.now(), fixedUpdateRate)
+
         while (!glfwWindowShouldClose(window)) {
             // Poll events
             glfwPollEvents()
@@ -72,6 +85,14 @@ object Window {
             onUpdate()
 
             glfwSwapBuffers(window)
+
+            if (currentTime >= endTime) {
+                onFixedUpdate()
+
+                endTime = Time.addSeconds(Time.now(), fixedUpdateRate)
+            }
+
+            currentTime = Time.now()
         }
     }
 }

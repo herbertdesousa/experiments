@@ -19,6 +19,9 @@ fun main() {
             if (MouseListener.getKey(GLFW.GLFW_MOUSE_BUTTON_1)) {
                 println("Mouse pressed")
             }
+        },
+        onFixedUpdate = {
+
         }
     )
 }
