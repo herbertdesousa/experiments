@@ -23,7 +23,7 @@ object Window {
     fun get(): Long = window
 
     fun run(
-        onStart: (window: Long) -> Unit,
+        onStart: () -> Unit,
         onUpdate: () -> Unit,
         onFixedUpdate: () -> Unit,
     ) {
@@ -41,7 +41,7 @@ object Window {
         glfwSetErrorCallback(null)?.free()
     }
 
-    private fun init(onStart: (window: Long) -> Unit) {
+    private fun init(onStart: () -> Unit) {
         GLFWErrorCallback.createPrint(System.err).set()
 
         if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW")
@@ -58,7 +58,7 @@ object Window {
 
         glfwMakeContextCurrent(window)
 
-        onStart(window)
+        onStart()
 
         // Enable v-sync
         glfwSwapInterval(1)
