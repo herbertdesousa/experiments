@@ -1,5 +1,6 @@
 package engine
 
+import engine.util.Time
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -8,19 +9,26 @@ import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil.NULL
 import kotlin.properties.Delegates
 
-object Window {
-    private val width = 1920 / 2
-    private val height = 1080 / 2
-    private val title = "My Game"
-    private var window by Delegates.notNull<Long>()
+class Window(
+    val width: Int = 1920 / 2,
+    val height: Int = 1080 / 2,
+    val title: String = "",
+    val listeners: (window: Long) -> Unit,
+    val onStart: () -> Unit,
+    val onUpdate: () -> Unit,
+) {
+    var window by Delegates.notNull<Long>();
+
+    private var red = 0f;
+    var green = 0f;
+    var blue = 0f;
+    var alpha = 0f
 
     fun get(): Long = window
 
-    fun run(onStart: (window: Long) -> Unit, onUpdate: () -> Unit) {
-        println("Game Started")
-
-        init(onStart)
-        loop(onUpdate)
+    init {
+        init()
+        loop()
 
         // Free the memory
         glfwFreeCallbacks(window)
@@ -31,7 +39,7 @@ object Window {
         glfwSetErrorCallback(null)?.free()
     }
 
-    private fun init(onStart: (window: Long) -> Unit) {
+    private fun init() {
         GLFWErrorCallback.createPrint(System.err).set()
 
         if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW")
@@ -48,7 +56,7 @@ object Window {
 
         glfwMakeContextCurrent(window)
 
-        onStart(window)
+        listeners(window)
 
         // Enable v-sync
         glfwSwapInterval(1)
@@ -59,12 +67,14 @@ object Window {
         GL.createCapabilities()
     }
 
-    private fun loop(onUpdate: () -> Unit) {
+    private fun loop() {
+        onStart()
+
         while (!glfwWindowShouldClose(window)) {
             // Poll events
             glfwPollEvents()
 
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
+            glClearColor(red, green, blue, alpha)
             glClear(GL_COLOR_BUFFER_BIT)
 
             onUpdate()
