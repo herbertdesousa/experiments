@@ -9,11 +9,15 @@ import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil.NULL
 import kotlin.properties.Delegates
 
-object Window {
-    private val width = 1920 / 2
-    private val height = 1080 / 2
-    private val title = "My Game"
-    private var window by Delegates.notNull<Long>()
+class Window(
+    val width: Int = 1920 / 2,
+    val height: Int = 1080 / 2,
+    val title: String = "",
+    val listeners: (window: Long) -> Unit,
+    val onStart: () -> Unit,
+    val onUpdate: () -> Unit,
+) {
+    var window by Delegates.notNull<Long>();
 
     private var red = 0f;
     var green = 0f;
@@ -22,15 +26,9 @@ object Window {
 
     fun get(): Long = window
 
-    fun run(
-        onStart: () -> Unit,
-        onUpdate: () -> Unit,
-        onFixedUpdate: () -> Unit,
-    ) {
-        println("Game Started")
-
-        init(onStart)
-        loop(onUpdate, onFixedUpdate)
+    init {
+        init()
+        loop()
 
         // Free the memory
         glfwFreeCallbacks(window)
@@ -41,7 +39,7 @@ object Window {
         glfwSetErrorCallback(null)?.free()
     }
 
-    private fun init(onStart: () -> Unit) {
+    private fun init() {
         GLFWErrorCallback.createPrint(System.err).set()
 
         if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW")
@@ -58,7 +56,7 @@ object Window {
 
         glfwMakeContextCurrent(window)
 
-        onStart()
+        listeners(window)
 
         // Enable v-sync
         glfwSwapInterval(1)
@@ -69,11 +67,8 @@ object Window {
         GL.createCapabilities()
     }
 
-    private fun loop(onUpdate: () -> Unit, onFixedUpdate: () -> Unit) {
-        val fixedUpdateRate = 0.02f
-
-        var currentTime = Time.now()
-        var endTime = Time.addSeconds(Time.now(), fixedUpdateRate)
+    private fun loop() {
+        onStart()
 
         while (!glfwWindowShouldClose(window)) {
             // Poll events
@@ -85,14 +80,6 @@ object Window {
             onUpdate()
 
             glfwSwapBuffers(window)
-
-            if (currentTime >= endTime) {
-                onFixedUpdate()
-
-                endTime = Time.addSeconds(Time.now(), fixedUpdateRate)
-            }
-
-            currentTime = Time.now()
         }
     }
 }
