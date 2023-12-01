@@ -1,14 +1,17 @@
+package engine
+
 import engine.InputListeners.KeyListener
 import engine.InputListeners.MouseListener
-import engine.Window
 import engine.util.Time
 import org.lwjgl.glfw.GLFW
 
-object Engine {
+class Engine(startScene: Scene) {
     lateinit var window: Window
 
+    var currentScene = startScene
+
     init {
-        println("Engine has been Started")
+        println("engine.Engine has been Started")
 
         createWindow()
     }
@@ -28,11 +31,13 @@ object Engine {
                 GLFW.glfwSetKeyCallback(window, KeyListener::keyCallback)
             },
             onStart = {
-                //
+                currentScene.onStart()
             },
             onUpdate = {
+                currentScene.onUpdate()
+
                 if (currentTime >= endTime) {
-                    // Fixed Update
+                    currentScene.onFixedUpdate()
 
                     endTime = Time.addSeconds(Time.now(), fixedUpdateRate)
                 }
