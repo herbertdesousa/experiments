@@ -1,17 +1,16 @@
 package Scenes
 
-import engine.Scene
+import engine.scene.Scene
 
-class Scene2 : Scene() {
+object Scene2 : Scene() {
     override fun onStart() {
-        println("onStart")
+        println("On Start Scene2")
+
     }
 
     override fun onUpdate() {
-        println("onUpdate")
     }
 
     override fun onFixedUpdate() {
-        println("onFixedUpdate")
     }
 }
