@@ -1,0 +1,90 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Financias</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <h1>Finâncias</h1>
+
+    <div class="wrapper">
+      <div class="table">
+        <h2>Dias</h2>
+
+      <div class="table-days">
+          <table>
+            <tr>
+              <th>Dia</th>
+              <th>Valor</th>
+            </tr>
+            {{#each days}}
+              <tr id="{{this.Day}}">
+                <td>{{this.Day}}</td>
+                <td title="{{this.Summary}}">
+                  {{#if this.Summary}}
+                    <b>{{this.Amount}}</b>
+                  {{else}}
+                    {{this.Amount}}
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>
+
+      <div class="month-wrapper">
+        <div class="table">
+          <h2>Ganho/Mês</h2>
+
+          <table>
+            <tr>
+              <th>Dia</th>
+              <th>Nome</th>
+              <th>Valor</th>
+            </tr>
+            {{#each incomes}}
+              <tr id="{{this.Cod_Finance}}">
+                <td>{{this.Day}}</td>
+                <td>{{this.Name}}</td>
+                <td>{{this.Amount}}</td>
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+
+        <div class="table">
+          <h2>Gastos/Mês</h2>
+
+          <table>
+            <tr>
+              <th>Dia</th>
+              <th>Nome</th>
+              <th>Valor</th>
+            </tr>
+            {{#each outcomes}}
+              <tr id="{{this.Cod_Finance}}">
+                <td>{{this.Day}}</td>
+                <td>{{this.Name}}</td>
+                <td>{{this.Amount}}</td>
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="./index.js"></script>
+
+</html>
