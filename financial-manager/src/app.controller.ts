@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { Finance } from './model/Finance';
 import Handlebars from 'handlebars';
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { PrismaService } from './services/prisma.service';
 
 function toMoney(amount: number): string {
   return amount.toLocaleString('pt-br', {
@@ -14,32 +14,11 @@ function toMoney(amount: number): string {
 
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor(private prisma: PrismaService) {}
 
   @Get()
   async list(): Promise<string> {
-    const finance1 = new Finance();
-    finance1.Cod_Finance = new Date(Date.now()).toISOString();
-    finance1.Name = '1 parcela';
-    finance1.Type = 'INCOME';
-    finance1.Amount = 1259.43;
-    finance1.Day = 5;
-
-    const finance3 = new Finance();
-    finance3.Cod_Finance = new Date(Date.now()).toISOString();
-    finance3.Name = '2 parcela';
-    finance3.Type = 'INCOME';
-    finance3.Amount = 2600.43;
-    finance3.Day = 5;
-
-    const finance2 = new Finance();
-    finance2.Cod_Finance = new Date(Date.now()).toISOString();
-    finance2.Name = 'Faculdade';
-    finance2.Type = 'OUTCOME';
-    finance2.Amount = 2440;
-    finance2.Day = 20;
-
-    const finances = [finance1, finance3, finance2];
+    const finances = await this.prisma.finances.findMany();
 
     type InDay = { Day: number; Summary: string; Amount: number };
 
