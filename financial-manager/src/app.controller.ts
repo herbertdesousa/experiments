@@ -80,8 +80,12 @@ export class AppController {
 
     return template({
       days,
-      incomes: finances.filter((i) => i.Type === 'INCOME'),
-      outcomes: finances.filter((i) => i.Type === 'OUTCOME'),
+      incomes: finances
+        .filter((i) => i.Type === 'INCOME')
+        .map((i) => ({ ...i, Amount: toMoney(i.Amount) })),
+      outcomes: finances
+        .filter((i) => i.Type === 'OUTCOME')
+        .map((i) => ({ ...i, Amount: toMoney(i.Amount) })),
     });
   }
 }
