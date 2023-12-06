@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import * as path from 'path';
+import { PrismaService } from './services/prisma.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import * as path from 'path';
     }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}
