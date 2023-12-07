@@ -57,8 +57,11 @@ export class AppController {
       }),
     );
 
+    const lastDay = days[days.length - 1];
+
     return template({
       days,
+      spendAmount: lastDay ? toMoney(lastDay.Amount) : '',
       incomes: finances
         .filter((i) => i.Type === 'INCOME')
         .map((i) => ({ ...i, Amount: toMoney(i.Amount) })),
