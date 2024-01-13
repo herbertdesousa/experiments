@@ -8,13 +8,15 @@ struct Array {
 
     void (*push)(struct Array *array, int value);
 
-    int (*findIndexAt)(struct Array *array, int index);
+    int (*at)(struct Array *array, int index);
 
     void (*dump)(struct Array *array);
+
+    int (*pop)(struct Array *array);
 };
 
 void dump(struct Array *array) {
-    printf("arr[");
+    printf("arr(%d)[", array->size);
 
     for (int i = 0; i < array->size; ++i) {
         if (i == array->size - 1) {
@@ -38,12 +40,21 @@ void push(struct Array *array, int value) {
     array->size += 1;
 }
 
-int findIndexAt(struct Array *array, int index) {
+int at(struct Array *array, int index) {
     if (index < 0 || index >= array->size) {
         return -1;
     }
 
     return array->pointer[index];
+}
+
+int pop(struct Array *array) {
+    if (array->size == 0) return -1;
+
+    int item = array->pointer[array->size - 1];
+    array->size -= 1;
+
+    return item;
 }
 
 struct Array *createArray() {
@@ -54,9 +65,10 @@ struct Array *createArray() {
 
     array->pointer = malloc(array->capacity * sizeof(int));
 
-    array->findIndexAt = findIndexAt;
+    array->at = at;
     array->push = push;
     array->dump = dump;
+    array->pop = pop;
 
     return array;
 }
@@ -69,6 +81,14 @@ int main() {
     for (int i = 0; i < 20; ++i) {
         array->push(array, i);
     }
+
+    array->dump(array);
+
+    printf("%d\n", array->pop(array));
+
+    array->dump(array);
+
+    array->push(array, 20);
 
     array->dump(array);
 
