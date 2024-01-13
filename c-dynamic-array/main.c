@@ -38,7 +38,7 @@ void push(struct Array *array, int value) {
     array->size += 1;
 }
 
-int findIndexAt(struct Array *array, int index) {
+int at(struct Array *array, int index) {
     if (index < 0 || index >= array->size) {
         return -1;
     }
@@ -54,7 +54,7 @@ struct Array *createArray() {
 
     array->pointer = malloc(array->capacity * sizeof(int));
 
-    array->findIndexAt = findIndexAt;
+    array->findIndexAt = at;
     array->push = push;
     array->dump = dump;
 
