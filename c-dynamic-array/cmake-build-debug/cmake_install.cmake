@@ -1,4 +1,4 @@
-# Install script for directory: C:/MyStuffs/codes/c/first
+# Install script for directory: C:/MyStuffs/codes/github/experiments/c-dynamic-array
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/MyStuffs/codes/c/first/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/MyStuffs/codes/github/experiments/c-dynamic-array/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
