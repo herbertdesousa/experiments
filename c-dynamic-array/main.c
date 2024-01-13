@@ -7,8 +7,25 @@ struct Array {
     int *pointer;
 
     void (*push)(struct Array *array, int value);
-    int (*findIndexAt)(struct Array * array, int index);
+
+    int (*findIndexAt)(struct Array *array, int index);
+
+    void (*dump)(struct Array *array);
 };
+
+void dump(struct Array *array) {
+    printf("arr[");
+
+    for (int i = 0; i < array->size; ++i) {
+        if (i == array->size - 1) {
+            printf("%d", array->pointer[i]);
+        } else {
+            printf("%d, ", array->pointer[i]);
+        }
+    }
+
+    printf("]\n");
+}
 
 void push(struct Array *array, int value) {
     if (array->size == array->capacity) {
@@ -21,7 +38,7 @@ void push(struct Array *array, int value) {
     array->size += 1;
 }
 
-int findIndexAt(struct Array * array, int index) {
+int findIndexAt(struct Array *array, int index) {
     if (index < 0 || index >= array->size) {
         return -1;
     }
@@ -39,32 +56,21 @@ struct Array *createArray() {
 
     array->findIndexAt = findIndexAt;
     array->push = push;
+    array->dump = dump;
 
     return array;
 }
 
 int main() {
-    struct Array *pArray = createArray();
+    struct Array *array = createArray();
 
-    printf("%p", pArray->pointer);
-
-    printf(
-    "size: %d\n capacity: %d\n index at(0): %d\n",
-        pArray->size,
-        pArray->capacity,
-        pArray->findIndexAt(pArray, 0)
-    );
+    array->dump(array);
 
     for (int i = 0; i < 20; ++i) {
-        pArray->push(pArray, i);
+        array->push(array, i);
     }
 
-    printf(
-        "size: %d\n capacity: %d\n index at(6): %d\n",
-        pArray->size,
-        pArray->capacity,
-        pArray->findIndexAt(pArray, 6)
-    );
+    array->dump(array);
 
     return 0;
 }
