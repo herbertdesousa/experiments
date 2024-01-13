@@ -1,16 +1,23 @@
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 struct Array {
     int size;
     int capacity;
     int *pointer;
 
-//    void (*push)(struct Array *array, int value);
+    void (*push)(struct Array *array, int value);
     int (*findIndexAt)(struct Array * array, int index);
 };
 
 void push(struct Array *array, int value) {
+    if (array->size == array->capacity) {
+        array->capacity *= 2;
+
+        array->pointer = realloc(array->pointer, array->capacity * sizeof(int));
+    }
+
+    *(array->pointer + array->size) = value;
     array->size += 1;
 }
 
@@ -25,16 +32,13 @@ int findIndexAt(struct Array * array, int index) {
 struct Array *createArray() {
     struct Array *array = malloc(sizeof(struct Array));
 
-    array->size = 3;
-    array->capacity = 4;
+    array->size = 0;
+    array->capacity = 2;
 
     array->pointer = malloc(array->capacity * sizeof(int));
 
-    *(array->pointer + 0) = 10;
-    *(array->pointer + 1) = 20;
-    *(array->pointer + 2) = 30;
-
     array->findIndexAt = findIndexAt;
+    array->push = push;
 
     return array;
 }
@@ -42,7 +46,25 @@ struct Array *createArray() {
 int main() {
     struct Array *pArray = createArray();
 
-    printf("%d\n", pArray->findIndexAt(pArray, 2));
+    printf("%p", pArray->pointer);
+
+    printf(
+    "size: %d\n capacity: %d\n index at(0): %d\n",
+        pArray->size,
+        pArray->capacity,
+        pArray->findIndexAt(pArray, 0)
+    );
+
+    for (int i = 0; i < 20; ++i) {
+        pArray->push(pArray, i);
+    }
+
+    printf(
+        "size: %d\n capacity: %d\n index at(6): %d\n",
+        pArray->size,
+        pArray->capacity,
+        pArray->findIndexAt(pArray, 6)
+    );
 
     return 0;
 }
